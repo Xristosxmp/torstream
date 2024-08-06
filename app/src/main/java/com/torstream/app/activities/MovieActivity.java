@@ -1,5 +1,6 @@
 package com.torstream.app.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -13,9 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.torstream.app.R;
 import com.torstream.app.databinding.ActivityMovieBinding;
-import com.torstream.app.models.Hash;
 import com.torstream.app.models.Movie;
 import com.torstream.app.adapters.movieDashboardAdapter;
 
@@ -34,6 +33,7 @@ public class MovieActivity extends AppCompatActivity {
 
     private ActivityMovieBinding binding;
     private ArrayList<Movie> list = new ArrayList<>();
+
     private movieDashboardAdapter adapter;
 
 
@@ -52,11 +52,22 @@ public class MovieActivity extends AppCompatActivity {
 
         Movie var_2746123 = (Movie) getIntent().getSerializableExtra("var_7362512");
         list.add(var_2746123);
-        adapter = new movieDashboardAdapter(this , list);
+        adapter = new movieDashboardAdapter(this, list, movie -> {
+            Intent i = new Intent(this , StreamActivity.class);
+            i.putExtra("var_72631623721372137" , movie.hash);
+            i.putExtra("var_85721631263652312" , var_2746123.name);
+            startActivity(i);
+            overridePendingTransition(0,0);
+        });
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                binding.movieDashboard.getLayoutManager().scrollToPosition(0);
+            }
+        });
         binding.movieDashboard.setAdapter(adapter);
         binding.movieDashboard.setRecycledViewPool(new RecyclerView.RecycledViewPool());
         binding.movieDashboard.setHasFixedSize(true);
-        binding.movieDashboard.setItemViewCacheSize(2);
         new Thread(() ->{
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -66,20 +77,18 @@ public class MovieActivity extends AppCompatActivity {
                 Response response = client.newCall(request).execute();
                 if(response.isSuccessful()){
                     JSONArray streams = new JSONObject(response.body().string()).getJSONArray("streams");
-                    Movie var_72631263 = new Movie(); var_72631263.var_7452531_view = 0;
-                    ArrayList<Hash> var_9273612 = new ArrayList<>();
+                    ArrayList<Movie> var_9273612 = new ArrayList<>();
                     for(int i=0; i<streams.length(); i++){
-                        Hash var_629123 = new Hash();
+                        Movie var_72631263 = new Movie(); var_72631263.var_7452531_view = 0;
                         JSONObject var_ob2321 = streams.getJSONObject(i);
-                        var_629123.name = var_ob2321.getString("name");
-                        var_629123.title = var_ob2321.getString("title");
-                        var_629123.hash = var_ob2321.getString("infoHash");
-                        var_9273612.add(var_629123);
+                        var_72631263.hash_name = var_ob2321.getString("name");
+                        var_72631263.title = var_ob2321.getString("title");
+                        var_72631263.hash = var_ob2321.getString("infoHash");
+                        var_9273612.add(var_72631263);
                     }
-                    var_72631263.links = (var_9273612);
                     runOnUiThread(() -> {
-                        list.add(var_72631263);
-                        adapter.notifyItemInserted(list.size()-1);
+                        list.addAll(var_9273612);
+                        adapter.notifyItemRangeInserted(1 , 6);
                     });
                 } else throw new IOException("Unexpected response code. " + response);
             } catch (IOException | JSONException e) {

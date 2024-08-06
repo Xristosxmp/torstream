@@ -11,5 +11,12 @@
         android:id="@+id/video_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/spin_kit" style="@style/SpinKitView.ThreeBounce" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" app:SpinKit_Color="@color/white" />
+    <TextView android:padding="16dp" android:layout_marginBottom="26dp" android:textSize="22dp" android:visibility="visible" android:id="@+id/progress" android:textColor="@color/white" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center"></TextView>
+
+    <ImageButton android:visibility="gone" android:id="@+id/goBack" android:padding="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="top|start" android:src="@drawable/left_arrow" android:clickable="true" android:background="@color/transparent" android:foreground="?android:attr/selectableItemBackgroundBorderless"/>
+    <TextView android:padding="16dp" android:visibility="gone" android:id="@+id/data" android:textColor="@color/white" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="top|center"></TextView>
+
 </FrameLayout>
 

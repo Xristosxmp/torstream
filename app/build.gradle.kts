@@ -51,4 +51,5 @@ dependencies {
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.github.TorrentStream:TorrentStreamServer-Android:2.0.0")
     implementation("org.videolan.android:libvlc-all:3.2.5")
+    implementation("com.github.ybq:Android-SpinKit:1.4.0")
 }

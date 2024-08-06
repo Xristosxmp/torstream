@@ -164,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
         TorrentOptions opts = new TorrentOptions.Builder()
                 .saveLocation(getFilesDir())
                 .removeFilesAfterStop(false)
+                .autoDownload(true)
+                .prepareSize(1000l)
                 .build();
         String var_64w = "127.0.0.1";
         try {

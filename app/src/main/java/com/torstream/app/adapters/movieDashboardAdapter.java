@@ -1,7 +1,6 @@
 package com.torstream.app.adapters;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,9 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,9 +20,6 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.torstream.app.R;
 import com.torstream.app.activities.MainActivity;
-import com.torstream.app.activities.StreamActivity;
-import com.torstream.app.databinding.MovieDetailsBinding;
-import com.torstream.app.models.Hash;
 import com.torstream.app.models.Movie;
 
 import java.io.Serializable;
@@ -35,18 +29,18 @@ public class movieDashboardAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private Context context;
     private ArrayList<Movie> list;
-
-
-    public movieDashboardAdapter(Context context , ArrayList<Movie> list){
+    private OnItemClickListener listener;
+    public movieDashboardAdapter(Context context , ArrayList<Movie> list , OnItemClickListener listener){
         this.context = context;
         this.list = list;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int var_34623612) {
         if(var_34623612 == 1)  return new MovieDetailsHolder(LayoutInflater.from(context).inflate(R.layout.movie_details, parent, false));
-        return new MovieHashesHolder(LayoutInflater.from(context).inflate(R.layout.movie_links, parent, false));
+        return new MovieHashesHolder(LayoutInflater.from(context).inflate(R.layout.hash_, parent, false));
     }
 
     @Override
@@ -55,8 +49,12 @@ public class movieDashboardAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if(var_2363 instanceof MovieHashesHolder) ((MovieHashesHolder) var_2363).bind(list.get(var_64));
     }
 
-    @Override public int getItemCount() {return list.size();}
-    @Override public int getItemViewType(int position) {return list.get(position).var_7452531_view;}
+    @Override public int getItemCount() {
+        return list.size();
+    }
+    @Override public int getItemViewType(int var_pos) {
+        return list.get(var_pos).var_7452531_view;
+    }
 
     class MovieDetailsHolder extends RecyclerView.ViewHolder implements Serializable{
         ImageView background, logo;
@@ -116,31 +114,24 @@ public class movieDashboardAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
-    class MovieHashesHolder extends RecyclerView.ViewHolder implements Serializable{
+    class MovieHashesHolder extends RecyclerView.ViewHolder implements Serializable, View.OnClickListener{
 
-        RecyclerView rv;
+        TextView name,title;
         public MovieHashesHolder(@NonNull View i) {
-            super(i);
-            rv = i.findViewById(R.id.hashes);
+            super(i); name = i.findViewById(R.id.name);
+            title = i.findViewById(R.id.title);
+            i.setOnClickListener(this);
+
         }
-        public void bind(Movie m){
-            rv.setAdapter(new hashAdapter(context, m.links, new hashAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(Hash h) {
-                    if(context instanceof Activity){
-                        Intent i = new Intent(context , StreamActivity.class);
-                        i.putExtra("var_85721631263652312" , m.name);
-                        i.putExtra("var_72631623721372137" , h.hash);
-                        context.startActivity(i);
-                        ((Activity) context).overridePendingTransition(0,0);
-                    }
-                }
-            }));
-            rv.setRecycledViewPool(new RecyclerView.RecycledViewPool());
-            rv.setHasFixedSize(true);
-            rv.setItemViewCacheSize(2);
+        void bind(Movie h){
+            name.setText(h.hash_name);
+            title.setText(h.title);
+            itemView.setTag(h);
         }
+        @Override  public void onClick(View v) { if (listener != null) listener.onItemClick((Movie) itemView.getTag()); }
     }
+    public interface OnItemClickListener {void onItemClick(Movie h);}
+
 
     FlexboxLayoutManager var_635481c(){
         FlexboxLayoutManager var_2u482136l = new FlexboxLayoutManager(context);

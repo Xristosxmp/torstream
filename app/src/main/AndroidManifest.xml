@@ -25,8 +25,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:launchMode="standard" android:name=".activities.MovieActivity"></activity>
-        <activity android:launchMode="standard" android:screenOrientation="landscape" android:name=".activities.StreamActivity"></activity>
+        <activity android:configChanges="screenLayout|screenSize|orientation" android:screenOrientation="portrait" android:launchMode="singleTask" android:name=".activities.MovieActivity"></activity>
+        <activity android:launchMode="singleInstance" android:screenOrientation="landscape" android:name=".activities.StreamActivity"></activity>
 
     </application>
 

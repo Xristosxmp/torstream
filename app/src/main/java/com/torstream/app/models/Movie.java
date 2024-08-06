@@ -13,12 +13,16 @@ public class Movie implements Serializable {
     public String logo_img;
     public String description;
 
-    public ArrayList<Hash> links;
+
     public ArrayList<String_> runtime_year_imdb;
     public ArrayList<String_> genres;
     public ArrayList<String_> director;
     public ArrayList<String_> cast;
     public ArrayList<String_> writer;
+
+    public String hash_name;
+    public String title;
+    public String hash;
 
 
 }
